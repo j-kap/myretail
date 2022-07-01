@@ -2,7 +2,6 @@ package firestore
 
 import (
 	"context"
-	"fmt"
 
 	"cloud.google.com/go/firestore"
 )
@@ -22,14 +21,10 @@ func (c Client) GetProductPrice(ctx context.Context, id string) (ProductPrice, e
 
 	snap, err := c.client.Collection(PricesCollection).Doc(id).Get(ctx)
 	if err != nil {
-		fmt.Println("error getting snap")
-		fmt.Println(err)
 		return price, err
 	}
 
 	if err = snap.DataTo(&price); err != nil {
-		fmt.Println("error parsing snap")
-		fmt.Println(err)
 		return price, err
 	}
 
@@ -38,7 +33,6 @@ func (c Client) GetProductPrice(ctx context.Context, id string) (ProductPrice, e
 
 func (c Client) SetProductPrice(ctx context.Context, id, price, currency string) error {
 	prodPrice := ProductPrice{
-		ID:       id,
 		Value:    price,
 		Currency: currency,
 	}

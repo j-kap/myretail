@@ -53,11 +53,12 @@ func (c client) GetProduct(id string) (ProductResponse, error) {
 	}
 
 	if resp.StatusCode != 200 {
-		return prod, fmt.Errorf("Unknown error(s) getting product: %s", parseErrors(resp_body))
+		err = fmt.Errorf(parseErrors(resp_body))
+		return prod, err
 	}
 
 	if err = json.Unmarshal(resp_body, &prod); err != nil {
-		return prod, fmt.Errorf("Error unmarshaling product info: %s", err)
+		return prod, err
 	}
 
 	return prod, nil

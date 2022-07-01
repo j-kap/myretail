@@ -2,10 +2,11 @@ package main
 
 import (
 	"context"
-	"log"
 
 	"github.com/gin-gonic/gin"
 	"github.com/j-kap/myretail/pkg/products"
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 
 	"cloud.google.com/go/firestore"
 
@@ -14,6 +15,8 @@ import (
 
 func main() {
 	ctx := context.Background()
+	zerolog.SetGlobalLevel(zerolog.InfoLevel)
+	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
 
 	r := gin.Default()
 
@@ -21,12 +24,14 @@ func main() {
 
 	fsClient, err := firestore.NewClient(ctx, projectID)
 	if err != nil {
-		log.Fatalf("Failed to create client: %v", err)
+		log.Fatal().Err(err).Msg("Failed to create client")
 	}
 
 	defer fsClient.Close()
 
-	products.RegisterRoutes(r, db.New(fsClient))
+	h := products.New(db.New(fsClient))
 
-	r.Run("localhost:8080")
+	products.RegisterRoutes(r, h)
+
+	r.Run("0.0.0.0:8080")
 }

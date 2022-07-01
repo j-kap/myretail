@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog/log"
 
 	"github.com/j-kap/myretail/pkg/redsky"
 )
@@ -20,9 +21,10 @@ func (h handler) Get(c *gin.Context) {
 	prodResponse, err := client.GetProduct(id)
 	if err != nil {
 		if err == redsky.Err404NotFound {
+			log.Info().Str("id", id).Msg("Product not found")
 			c.AbortWithError(http.StatusNotFound, err)
-
 		} else {
+			log.Error().Err(err).Str("id", id).Msg("Error getting product")
 			c.AbortWithError(http.StatusInternalServerError, err)
 		}
 
@@ -33,6 +35,7 @@ func (h handler) Get(c *gin.Context) {
 
 	prodPrice, err := h.DB.GetProductPrice(c, id)
 	if err != nil {
+		log.Error().Err(err).Str("id", id).Msg("Error getting product price")
 		prodPrice.Value = "UNKNOWN"
 		prodPrice.Currency = "UNKNOWN"
 	}

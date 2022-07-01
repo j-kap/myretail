@@ -10,11 +10,13 @@ type handler struct {
 	DB firestore.Client
 }
 
-func RegisterRoutes(r *gin.Engine, db firestore.Client) {
-	h := &handler{
+func New(db firestore.Client) *handler {
+	return &handler{
 		DB: db,
 	}
+}
 
+func RegisterRoutes(r *gin.Engine, h *handler) {
 	routes := r.Group("/products")
 
 	routes.GET("/:id", h.Get)
