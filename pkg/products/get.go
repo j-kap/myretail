@@ -16,9 +16,7 @@ func (h handler) Get(c *gin.Context) {
 
 	product.ID = id
 
-	client := redsky.New()
-
-	prodResponse, err := client.GetProduct(id)
+	prodResponse, err := h.client.GetProduct(id)
 	if err != nil {
 		if err == redsky.Err404NotFound {
 			log.Info().Str("id", id).Msg("Product not found")

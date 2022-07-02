@@ -12,25 +12,24 @@ var (
 	Err404NotFound = errors.New("Product not found")
 )
 
-const BASE_URL = "https://my-products-api.com/api/v1/products?key=super-secret-key"
-
-type client struct{}
-
-func New() client {
-	return client{}
+type Client struct {
+	BaseURL string
 }
 
-func (c client) GetProduct(id string) (ProductResponse, error) {
+func New(baseURL string) Client {
+	return Client{baseURL}
+}
+
+func (c Client) GetProduct(id string) (ProductResponse, error) {
 	var prod ProductResponse
 
 	client := &http.Client{}
-	req, err := http.NewRequest("GET", BASE_URL, nil)
-	req.Header.Add("Accept", "application/json")
-
+	req, err := http.NewRequest("GET", c.BaseURL, nil)
 	if err != nil {
 		return prod, err
 	}
 
+	req.Header.Add("Accept", "application/json")
 	q := req.URL.Query()
 	q.Add("tcin", id)
 

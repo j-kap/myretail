@@ -4,15 +4,18 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/j-kap/myretail/pkg/firestore"
+	"github.com/j-kap/myretail/pkg/redsky"
 )
 
 type handler struct {
-	DB firestore.Client
+	DB     firestore.Client
+	client redsky.Client
 }
 
-func New(db firestore.Client) *handler {
+func New(db firestore.Client, client redsky.Client) *handler {
 	return &handler{
-		DB: db,
+		DB:     db,
+		client: client,
 	}
 }
 

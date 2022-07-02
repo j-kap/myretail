@@ -10,6 +10,9 @@ cloud.google.com/go/internal/version
 ## explicit; go 1.11
 cloud.google.com/go/firestore
 cloud.google.com/go/firestore/apiv1
+# github.com/JeremyLoy/config v1.5.0
+## explicit; go 1.16
+github.com/JeremyLoy/config
 # github.com/gin-contrib/sse v0.1.0
 ## explicit; go 1.12
 github.com/gin-contrib/sse
