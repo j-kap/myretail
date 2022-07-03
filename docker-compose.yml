@@ -1,6 +1,8 @@
 version: "3.2"
 services:
   firestore_emulator:
+    # logging:
+    #   driver: none # Disable logging to see test output easier
     image: mtlynch/firestore-emulator
     environment:
       - FIRESTORE_PROJECT_ID=myretail-project-id
@@ -8,7 +10,9 @@ services:
     ports:
       - 8200:8200
   app:
-    image: myretail
+    build:
+      context: .
+      target: prod
     environment:
       - FIRESTORE_EMULATOR_HOST=firestore_emulator:8200
       - PROJECT_ID=myretail-project-id
@@ -18,3 +22,19 @@ services:
       - 8000:8000
     depends_on:
       - firestore_emulator
+  app-tests:
+    build:
+      context: .
+      target: dev
+    working_dir: /src
+    command: dockerize
+        -wait tcp://firestore_emulator:8200 -wait tcp://app:8000 -timeout 10s
+        sh -c "go test ./... -tags integration"
+    environment:
+      - CGO_ENABLED=0
+      - APP_URL=http://app:8000
+    depends_on:
+      - firestore_emulator
+      - app
+    profiles:
+      - tests

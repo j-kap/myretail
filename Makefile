@@ -10,11 +10,12 @@ docker/build:
 	@ docker build . -f docker/Dockerfile -t myretail
 
 docker/run:
-	@ docker run -p 8000:8080 -v "${GOOGLE_APPLICATION_CREDENTIALS}":/gcp/creds.json:ro --env GOOGLE_APPLICATION_CREDENTIALS=/gcp/creds.json --env-file .env myretail
+	@ docker run -p 8000:8000 -v "${GOOGLE_APPLICATION_CREDENTIALS}":/gcp/creds.json:ro --env GOOGLE_APPLICATION_CREDENTIALS=/gcp/creds.json --env-file .env myretail
 
 docker/build_run: docker/build docker/run
 
 docker/compose:
-	@ docker-compose up
+	@ docker compose up --build
 
-docker/build_run_compose: docker/build docker/compose
+docker/tests:
+	@ docker compose --profile tests up --build --abort-on-container-exit --exit-code-from=app-tests --attach app-tests
