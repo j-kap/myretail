@@ -16,8 +16,10 @@ import (
 )
 
 type Config struct {
-	Port        int    `config:"PORT"`
-	ProductsURL string `config:"PRODUCTS_URL"`
+	Port                  int    `config:"PORT"`
+	ProductsURL           string `config:"PRODUCTS_URL"`
+	ProjectID             string `config:"PROJECT_ID"`
+	FirestoreEmulatorHost string `config:"FIRESTORE_EMULATOR_HOST"`
 }
 
 func main() {
@@ -33,20 +35,26 @@ func main() {
 	}
 
 	if c.Port == 0 {
-		c.Port = 8080
+		c.Port = 8000
 	}
 
 	if c.ProductsURL == "" {
 		log.Fatal().Msg("PRODUCTS_URL must be set")
 	}
 
+	if c.ProjectID == "" {
+		log.Fatal().Msg("PROJECT_ID must be set")
+	}
+
 	r := gin.Default()
 
-	projectID := "silken-physics-355018"
+	fsClient, err := firestore.NewClient(ctx, c.ProjectID)
+	if c.FirestoreEmulatorHost != "" {
+		log.Info().Msgf("Using Firestore Emulator: %s", c.FirestoreEmulatorHost)
+	}
 
-	fsClient, err := firestore.NewClient(ctx, projectID)
 	if err != nil {
-		log.Fatal().Err(err).Msg("Failed to create client")
+		log.Fatal().Err(err).Msg("Failed to create firestore client")
 	}
 
 	defer fsClient.Close()

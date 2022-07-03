@@ -1,0 +1,20 @@
+version: "3.2"
+services:
+  firestore_emulator:
+    image: mtlynch/firestore-emulator
+    environment:
+      - FIRESTORE_PROJECT_ID=myretail-project-id
+      - PORT=8200
+    ports:
+      - 8200:8200
+  app:
+    image: myretail
+    environment:
+      - FIRESTORE_EMULATOR_HOST=firestore_emulator:8200
+      - PROJECT_ID=myretail-project-id
+      - PRODUCTS_URL=${PRODUCTS_URL}
+      - PORT=8000
+    ports:
+      - 8000:8000
+    depends_on:
+      - firestore_emulator

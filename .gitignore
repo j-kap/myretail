@@ -6,6 +6,9 @@
 *.so
 *.dylib
 
+# Docker compose env file with secrets
+.env
+
 # Test binary, built with `go test -c`
 *.test
 

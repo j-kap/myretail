@@ -13,3 +13,8 @@ docker/run:
 	@ docker run -p 8000:8080 -v "${GOOGLE_APPLICATION_CREDENTIALS}":/gcp/creds.json:ro --env GOOGLE_APPLICATION_CREDENTIALS=/gcp/creds.json --env-file .env myretail
 
 docker/build_run: docker/build docker/run
+
+docker/compose:
+	@ docker-compose up
+
+docker/build_run_compose: docker/build docker/compose
