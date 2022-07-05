@@ -29,7 +29,7 @@ services:
     working_dir: /src
     command: dockerize
         -wait tcp://firestore_emulator:8200 -wait tcp://app:8000 -timeout 10s
-        sh -c "go test ./... -tags integration"
+        sh -c "go test --tags=integration ./..."
     environment:
       - CGO_ENABLED=0
       - APP_URL=http://app:8000

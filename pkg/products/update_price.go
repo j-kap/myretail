@@ -13,14 +13,14 @@ func (h handler) UpdatePrice(c *gin.Context) {
 	var body Product
 	if err := c.BindJSON(&body); err != nil {
 		log.Error().Err(err).Str("id", id).Msg("Error parsing product")
-		c.AbortWithError(http.StatusBadRequest, err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, errResponse(err))
 		return
 	}
 
 	err := h.DB.SetProductPrice(c, id, body.Price.Value, body.Price.Currency)
 	if err != nil {
 		log.Error().Err(err).Str("id", id).Msg("Error setting product price")
-		c.AbortWithError(http.StatusInternalServerError, err)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, errResponse(err))
 		return
 	}
 

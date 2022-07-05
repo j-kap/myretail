@@ -10,3 +10,11 @@ type Price struct {
 	Value    string `json:"value,omitempty"`
 	Currency string `json:"currency_code,omitempty"`
 }
+
+type ErrorResponse struct {
+	Errors []ErrorMessage `json:"errors"`
+}
+
+type ErrorMessage struct {
+	Message string `json:"message"`
+}

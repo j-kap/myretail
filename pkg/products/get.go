@@ -20,10 +20,10 @@ func (h handler) Get(c *gin.Context) {
 	if err != nil {
 		if err == redsky.Err404NotFound {
 			log.Info().Str("id", id).Msg("Product not found")
-			c.AbortWithError(http.StatusNotFound, err)
+			c.AbortWithStatusJSON(http.StatusNotFound, errResponse(err))
 		} else {
 			log.Error().Err(err).Str("id", id).Msg("Error getting product")
-			c.AbortWithError(http.StatusInternalServerError, err)
+			c.AbortWithStatusJSON(http.StatusInternalServerError, errResponse(err))
 		}
 
 		return
