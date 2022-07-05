@@ -21,6 +21,13 @@ docker/compose:
 docker/tests:
 	@ docker compose --profile tests up --build --abort-on-container-exit --exit-code-from=app-tests --attach app-tests
 
+gcloud/init:
+	@ . .env; \
+	  export PROJECT_ID; \
+	  gcloud services enable containerregistry.googleapis.com --project $${PROJECT_ID}; \
+	  gcloud services enable firestore.googleapis.com --project $${PROJECT_ID};
+	  gcloud firestore databases create --region us-central --project $${PROJECT_ID}
+
 gcloud/tag:
 	@ . .env; \
 	  export PROJECT_ID; \
@@ -37,4 +44,29 @@ gcloud/deploy:
 	  gcloud run deploy myretail --image gcr.io/$${PROJECT_ID}/myretail --region us-central1 --allow-unauthenticated \
 	    --set-env-vars PRODUCTS_URL=$${PRODUCTS_URL} --set-env-vars PROJECT_ID=$${PROJECT_ID}
 
+gcloud/build_push: docker/build gcloud/tag gcloud/push
+
 gcloud/build_deploy: docker/build gcloud/tag gcloud/push gcloud/deploy
+
+terraform/plan:
+	@ . .env; \
+	  export PRODUCTS_URL PROJECT_ID; \
+	  cd tf; \
+	  terraform plan -var gcp_project_id="$${PROJECT_ID}" -var "products_url=$${PRODUCTS_URL}" -out tf.plan
+
+terraform/apply:
+	@ . .env; \
+	  export PRODUCTS_URL PROJECT_ID; \
+	  cd tf; \
+	  terraform apply tf.plan
+
+terraform/destroy:
+	@ . .env; \
+	  export PRODUCTS_URL PROJECT_ID; \
+	  cd tf; \
+	  terraform plan -var gcp_project_id="$${PROJECT_ID}" -var "products_url=$${PRODUCTS_URL}" -out tf.plan -destroy; \
+	  terraform apply tf.plan
+
+terraform/deploy: terraform/plan terraform/apply
+
+terraform/build_deploy: gcloud/build_push terraform/deploy
