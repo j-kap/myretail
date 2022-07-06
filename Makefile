@@ -25,7 +25,9 @@ gcloud/init:
 	@ . .env; \
 	  export PROJECT_ID; \
 	  gcloud services enable containerregistry.googleapis.com --project $${PROJECT_ID}; \
-	  gcloud services enable firestore.googleapis.com --project $${PROJECT_ID};
+	  gcloud services enable firestore.googleapis.com --project $${PROJECT_ID}; \
+	  gcloud services enable appengine.googleapis.com --project $${PROJECT_ID}; \
+	  gcloud app create --region us-central --project $${PROJECT_ID}; \
 	  gcloud firestore databases create --region us-central --project $${PROJECT_ID}
 
 gcloud/tag:
