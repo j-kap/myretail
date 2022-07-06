@@ -104,6 +104,9 @@ Runs `docker/build` and `gcloud/push`.
 #### `gcloud/build_deploy`
 Runs `docker/build`, `gcloud/push`, and `gcloud/deploy`.
 
+#### `terraform/init`
+Initializes the terraform directory with the required providers. This must be run once before running the other `terraform/` targets.
+
 #### `terraform/plan`
 Displays the resources terraform will create in GCP and creates a plan file to be used in `terraform/apply`.
 

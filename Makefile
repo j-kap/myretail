@@ -46,6 +46,10 @@ gcloud/build_push: docker/build gcloud/push
 
 gcloud/build_deploy: docker/build gcloud/push gcloud/deploy
 
+terraform/init:
+	@ cd tf; \
+	  terraform init
+
 terraform/plan:
 	@ . .env; \
 	  export PRODUCTS_URL PROJECT_ID; \
