@@ -42,15 +42,13 @@ content-type: application/json; charset=utf-8
     "current_price": {
         "currency_code": "USD", 
         "value": "1.99"
-    }, 
-    "id": "13860428"
+    }
 }
 ```
 
 price.json contents:
 ```
 {
-    "id": "13860428",
     "current_price": {
         "currency_code": "USD", 
         "value": "1.99"
@@ -120,4 +118,4 @@ Destroys the previously applied resources.
 Runs `terraform/plan` and `terraform/apply`.
 
 #### `terraform/build_deploy`
-Runs `gcloud/build_push` and `terraform/apply`.
+Runs `gcloud/build_push` and `terraform/deploy`.
