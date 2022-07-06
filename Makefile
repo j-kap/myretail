@@ -30,14 +30,10 @@ gcloud/init:
 	  gcloud app create --region us-central --project $${PROJECT_ID}; \
 	  gcloud firestore databases create --region us-central --project $${PROJECT_ID}
 
-gcloud/tag:
-	@ . .env; \
-	  export PROJECT_ID; \
-	  docker tag myretail gcr.io/$${PROJECT_ID}/myretail:latest
-
 gcloud/push:
 	@ . .env; \
 	  export PROJECT_ID; \
+	  docker tag myretail gcr.io/$${PROJECT_ID}/myretail:latest; \
 	  docker push gcr.io/$${PROJECT_ID}/myretail:latest
 
 gcloud/deploy:
@@ -46,9 +42,9 @@ gcloud/deploy:
 	  gcloud run deploy myretail --image gcr.io/$${PROJECT_ID}/myretail --region us-central1 --allow-unauthenticated \
 	    --set-env-vars PRODUCTS_URL=$${PRODUCTS_URL} --set-env-vars PROJECT_ID=$${PROJECT_ID}
 
-gcloud/build_push: docker/build gcloud/tag gcloud/push
+gcloud/build_push: docker/build gcloud/push
 
-gcloud/build_deploy: docker/build gcloud/tag gcloud/push gcloud/deploy
+gcloud/build_deploy: docker/build gcloud/push gcloud/deploy
 
 terraform/plan:
 	@ . .env; \
